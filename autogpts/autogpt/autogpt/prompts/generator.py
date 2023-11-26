@@ -94,7 +94,7 @@ class PromptGenerator:
         command = PromptGenerator.Command(
             name=name,
             description=description,
-            params={name: type for name, type in params.items()},
+            params=dict(params),
             function=function,
         )
 

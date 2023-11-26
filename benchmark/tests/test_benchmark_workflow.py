@@ -34,7 +34,7 @@ def test_entire_workflow(
 
     # First POST request
     task_response_benchmark = requests.post(
-        URL_BENCHMARK + "/agent/tasks", json=task_request
+        f"{URL_BENCHMARK}/agent/tasks", json=task_request
     )
     timestamp_after_task_eval_created = datetime.datetime.now(datetime.timezone.utc)
     time.sleep(1.1)  # To make sure the 2 timestamps to compare are different
@@ -54,7 +54,7 @@ def test_entire_workflow(
     step_request = {"input": input_text}
 
     step_response = requests.post(
-        URL_BENCHMARK + "/agent/tasks/" + task_response_benchmark_id + "/steps",
+        f"{URL_BENCHMARK}/agent/tasks/{task_response_benchmark_id}/steps",
         json=step_request,
     )
     assert step_response.status_code == 200
@@ -62,12 +62,12 @@ def test_entire_workflow(
     assert step_response["is_last"] == True  # Assuming is_last is always True
 
     step_response = requests.post(
-        URL_BENCHMARK + "/agent/tasks/" + task_response_benchmark_id + "/evaluation",
+        f"{URL_BENCHMARK}/agent/tasks/{task_response_benchmark_id}/evaluation",
         json={},
     )
 
     step_response = requests.post(
-        URL_BENCHMARK + "/agent/tasks/" + task_response_benchmark_id + "/steps",
+        f"{URL_BENCHMARK}/agent/tasks/{task_response_benchmark_id}/steps",
         json=step_request,
     )
     assert step_response.status_code == 200
@@ -75,7 +75,7 @@ def test_entire_workflow(
     assert step_response["is_last"] == True  # Assuming is_last is always True
 
     eval_response = requests.post(
-        URL_BENCHMARK + "/agent/tasks/" + task_response_benchmark_id + "/evaluations",
+        f"{URL_BENCHMARK}/agent/tasks/{task_response_benchmark_id}/evaluations",
         json={},
     )
     assert eval_response.status_code == 200

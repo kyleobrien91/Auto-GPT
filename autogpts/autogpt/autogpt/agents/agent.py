@@ -91,9 +91,7 @@ class Agent(ContextMixin, WorkspaceMixin, WatchdogMixin, BaseAgent):
             remaining_budget = (
                 api_manager.get_total_budget() - api_manager.get_total_cost()
             )
-            if remaining_budget < 0:
-                remaining_budget = 0
-
+            remaining_budget = max(remaining_budget, 0)
             budget_msg = Message(
                 "system",
                 f"Your remaining API budget is ${remaining_budget:.3f}"

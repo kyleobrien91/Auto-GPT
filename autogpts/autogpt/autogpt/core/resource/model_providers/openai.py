@@ -120,10 +120,7 @@ for base, copies in chat_model_mapping.items():
         OPEN_AI_LANGUAGE_MODELS[copy] = copy_info
 
 
-OPEN_AI_MODELS = {
-    **OPEN_AI_LANGUAGE_MODELS,
-    **OPEN_AI_EMBEDDING_MODELS,
-}
+OPEN_AI_MODELS = OPEN_AI_LANGUAGE_MODELS | OPEN_AI_EMBEDDING_MODELS
 
 
 class OpenAIConfiguration(SystemConfiguration):
@@ -331,13 +328,11 @@ class OpenAIProvider(Configurable, LanguageModelProvider, EmbeddingModelProvider
             The kwargs for the embedding API call.
 
         """
-        embedding_kwargs = {
+        return {
             "model": model_name,
             **kwargs,
             **self._credentials.unmasked(),
         }
-
-        return embedding_kwargs
 
     def __repr__(self):
         return "OpenAIProvider()"

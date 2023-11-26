@@ -58,8 +58,7 @@ class Artifact(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
-        return _dict
+        return self.dict(by_alias=True, exclude={}, exclude_none=True)
 
     @classmethod
     def from_dict(cls, obj: dict) -> Artifact:
@@ -70,7 +69,7 @@ class Artifact(BaseModel):
         if not isinstance(obj, dict):
             return Artifact.parse_obj(obj)
 
-        _obj = Artifact.parse_obj(
+        return Artifact.parse_obj(
             {
                 "artifact_id": obj.get("artifact_id"),
                 "file_name": obj.get("file_name"),
@@ -80,4 +79,3 @@ class Artifact(BaseModel):
                 "agent_created": obj.get("agent_created"),
             }
         )
-        return _obj
