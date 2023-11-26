@@ -121,13 +121,12 @@ class NameAndGoals(PromptStrategy):
         create_agent_function = LanguageModelFunction(
             json_schema=self._create_agent_function,
         )
-        prompt = LanguageModelPrompt(
+        return LanguageModelPrompt(
             messages=[system_message, user_message],
             functions=[create_agent_function],
             # TODO
             tokens_used=0,
         )
-        return prompt
 
     def parse_response_content(
         self,

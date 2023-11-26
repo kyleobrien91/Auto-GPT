@@ -71,9 +71,7 @@ class ActionHistory:
 
     @property
     def current_record(self) -> CycleRecord | None:
-        if self.cursor == len(self):
-            return None
-        return self[self.cursor]
+        return None if self.cursor == len(self) else self[self.cursor]
 
     def __getitem__(self, key: int) -> CycleRecord:
         return self.cycles[key]

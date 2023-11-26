@@ -30,12 +30,10 @@ def dummy_agent(config: Config, memory_json_file):
         ],
     )
 
-    agent = Agent(
+    return Agent(
         memory=memory_json_file,
         command_registry=command_registry,
         ai_config=ai_config,
         config=config,
         triggering_prompt="dummy triggering prompt",
     )
-
-    return agent

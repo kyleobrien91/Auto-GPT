@@ -20,22 +20,19 @@ def agent(config: Config):
     ai_config = AIConfig(ai_name="Test AI")
     triggering_prompt = "Triggering prompt"
 
-    agent = Agent(
+    return Agent(
         memory=memory,
         command_registry=command_registry,
         ai_config=ai_config,
         config=config,
         triggering_prompt=triggering_prompt,
     )
-    return agent
 
 
 def test_message_history_batch_summary(mocker, agent: Agent, config: Config):
     history = MessageHistory(agent.llm, agent=agent)
-    model = config.fast_llm
     message_tlength = 0
-    message_count = 0
-
+    model = config.fast_llm
     # Setting the mock output and inputs
     mock_summary_response = ChatModelResponse(
         model_info=OPEN_AI_CHAT_MODELS[model],
@@ -66,12 +63,11 @@ def test_message_history_batch_summary(mocker, agent: Agent, config: Config):
     msg = Message("assistant", assistant_reply, "ai_response")
     history.append(msg)
     message_tlength += count_string_tokens(str(msg), config.fast_llm)
-    message_count += 1
-
+    message_count = 0 + 1
     # mock some websites returned from google search command in the past
     result = "Command google_search returned: ["
     for i in range(50):
-        result += "http://www.job" + str(i) + ".com,"
+        result += f"http://www.job{str(i)}.com,"
     result += "]"
     msg = Message("system", result, "action_result")
     history.append(msg)
@@ -82,6 +78,7 @@ def test_message_history_batch_summary(mocker, agent: Agent, config: Config):
     user_input_msg = Message("user", user_input)
     history.append(user_input_msg)
 
+    user_input = "Determine which next command to use, and respond using the format specified above:'"
     # mock numbers of AI response and action results from browse_website commands in the past, doesn't need the thoughts part, as the summarization code discard them anyway
     for i in range(50):
         assistant_reply = (
@@ -94,17 +91,12 @@ def test_message_history_batch_summary(mocker, agent: Agent, config: Config):
         message_tlength += count_string_tokens(str(msg), config.fast_llm)
         message_count += 1
 
-        result = (
-            "Command browse_website returned: Answer gathered from website: The text in job"
-            + str(i)
-            + " does not provide information on specific job requirements or a job URL.]"
-        )
+        result = f"Command browse_website returned: Answer gathered from website: The text in job{str(i)} does not provide information on specific job requirements or a job URL.]"
         msg = Message("system", result, "action_result")
         history.append(msg)
         message_tlength += count_string_tokens(str(msg), config.fast_llm)
         message_count += 1
 
-        user_input = "Determine which next command to use, and respond using the format specified above:'"
         user_input_msg = Message("user", user_input)
         history.append(user_input_msg)
 

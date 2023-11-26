@@ -33,11 +33,7 @@ base_dir = "reports"
 current_dir = os.getcwd()
 
 # Check if the current directory ends with 'reports'
-if current_dir.endswith("reports"):
-    base_dir = "/"
-else:
-    base_dir = "reports"
-
+base_dir = "/" if current_dir.endswith("reports") else "reports"
 # Create a list to store each row of data
 rows = []
 
@@ -90,9 +86,7 @@ def process_test(
 
     rows.append(row)
 
-    # Check for nested tests and process them if present
-    nested_tests = test_info.get("tests")
-    if nested_tests:
+    if nested_tests := test_info.get("tests"):
         for nested_test_name, nested_test_info in nested_tests.items():
             process_test(nested_test_name, nested_test_info, agent_name, common_data)
 

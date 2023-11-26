@@ -85,11 +85,10 @@ class Agent:
         Create a task for the agent.
         """
         try:
-            task = await self.db.create_task(
+            return await self.db.create_task(
                 input=task_request.input,
                 additional_input=task_request.additional_input,
             )
-            return task
         except Exception as e:
             raise
 
@@ -99,8 +98,7 @@ class Agent:
         """
         try:
             tasks, pagination = await self.db.list_tasks(page, pageSize)
-            response = TaskListResponse(tasks=tasks, pagination=pagination)
-            return response
+            return TaskListResponse(tasks=tasks, pagination=pagination)
         except Exception as e:
             raise
 
@@ -122,8 +120,7 @@ class Agent:
         """
         try:
             steps, pagination = await self.db.list_steps(task_id, page, pageSize)
-            response = TaskStepsListResponse(steps=steps, pagination=pagination)
-            return response
+            return TaskStepsListResponse(steps=steps, pagination=pagination)
         except Exception as e:
             raise
 
@@ -138,8 +135,7 @@ class Agent:
         Get a step by ID.
         """
         try:
-            step = await self.db.get_step(task_id, step_id)
-            return step
+            return await self.db.get_step(task_id, step_id)
         except Exception as e:
             raise
 
@@ -199,9 +195,7 @@ class Agent:
             path = artifact.file_name
             with open(path, "wb") as f:
                 f.write(retrieved_artifact)
-        except NotFoundError as e:
-            raise
-        except FileNotFoundError as e:
+        except (NotFoundError, FileNotFoundError) as e:
             raise
         except Exception as e:
             raise
